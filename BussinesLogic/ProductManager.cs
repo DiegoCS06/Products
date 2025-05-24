@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using DataPersistence;
+using Entities;
 using System;
 using System.Collections.Generic;
 
@@ -8,30 +9,27 @@ namespace BussinesLogic
     {
         private List<Product> products = new List<Product>();
 
-        public void AddProduct()
+        public void AddProduct(Product producto)
         {
-            Console.WriteLine("Ingrese la ID del Producto a añadir: ");
-            int idProducto = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el nombre del Producto a añadir: ");
-            string nombreProducto = Console.ReadLine();
-
-            Console.WriteLine("Ingrese el precio del Producto a añadir: ");
-            double precioProducto = double.Parse(Console.ReadLine());
-
-            Console.WriteLine("Ingrese el stock del Producto a añadir: ");
-            int stockProducto = int.Parse(Console.ReadLine());
-
-            var producto = new Product
+            //Validaciones
+            if (String.IsNullOrEmpty(producto.Name))
             {
-                Id = idProducto,
-                Name = nombreProducto,
-                Price = precioProducto,
-                Stock = stockProducto
-            };
+                throw new Exception("El nombre no puede estar vacío.");
+            }
 
-            products.Add(producto);
-            Console.WriteLine("Producto añadido correctamente.\n");
+            if (producto.Price < 1)
+            {
+                throw new Exception("El precio debe sar mayor a 0");
+            }
+
+            if(producto.Stock < 1)
+            {
+                throw new Exception("El stock debe ser mayor a 0");
+            }
+
+            var fm = new FileManager();
+            fm.SaveProduct(producto);
+
         }
 
         public List<Product> GetProducts()
